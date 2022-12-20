@@ -29,6 +29,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()
 from matplotlib.patches import Patch
 
+import wandb
+
 #!pip install webcolors
 import webcolors
 
@@ -154,5 +156,10 @@ criterion = nn.CrossEntropyLoss()
 # Optimizer 정의
 optimizer = torch.optim.Adam(params = model.parameters(), lr = learning_rate, weight_decay=1e-6)
 
-
+wandb.init(project="test-project", entity="cv_09_semanticsegmentation")
+wandb.config = {
+    "learning_rate": learning_rate,
+    "epochs": num_epochs,
+    "batch_size": batch_size,
+    }
 train(num_epochs, model, train_loader, val_loader, criterion, optimizer, saved_dir, val_every, device)
