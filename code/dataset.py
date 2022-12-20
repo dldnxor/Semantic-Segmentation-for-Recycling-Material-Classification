@@ -87,10 +87,18 @@ def validation(epoch, model, data_loader, criterion, device):
         avrg_loss = total_loss / cnt
         print(f'Validation #{epoch} \nAverage Loss: {round(avrg_loss.item(), 4)}, \tAccuracy : {round(acc, 4)}, \tmIoU: {round(mIoU, 4)}')
         print(f'IoU by class : \n{IoU_by_class}')
+
+        for d in IoU_by_class:
+            cls = list(d.keys())[0]
+            iou = list(d.values())[0]
+            wandb.log({
+                f"Valid/IoU_by_class_{cls}" : iou
+            })
+
         wandb.log({
                 "Valid/loss": loss,
                 "Valid/mIOU": mIoU,
-                "Valid/IoU_by_class": IoU_by_class[0],
+                # "Valid/IoU_by_class": IoU_by_class[0],
                 "Valid/acc": acc,
                 "Valid/acc_cls": acc_cls
                 })
