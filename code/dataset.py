@@ -178,6 +178,7 @@ def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, save
                 save_model(model, saved_dir)
             
             print(f">>>>>>>>>> BEST EPOCH : {best_epoch} <<<<<<<<<<")
+            print(f">>>>>>>>>> BEST mIoU : {best_mIoU} <<<<<<<<<<")
 
 def test(model, data_loader, device):
     size = 256
