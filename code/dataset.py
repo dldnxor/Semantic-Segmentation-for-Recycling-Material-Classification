@@ -92,7 +92,7 @@ def validation(epoch, model, data_loader, criterion, device):
             cls = list(d.keys())[0]
             iou = list(d.values())[0]
             wandb.log({
-                f"Valid/IoU_by_class_{cls}" : iou
+                f"Valid_IoU_By_Class/{cls}" : iou
             })
 
         wandb.log({
@@ -105,7 +105,7 @@ def validation(epoch, model, data_loader, criterion, device):
         
     return avrg_loss, mIoU
 
-def save_model(model, saved_dir, file_name='fcn_resnet50_best_model(pretrained).pt'):
+def save_model(model, saved_dir, file_name='fcn_resnet50_best_model(pretrained).pt'):    # 저장 파일 이름 바꿔주세요
     check_point = {'net': model.state_dict()}
     output_path = os.path.join(saved_dir, file_name)
     torch.save(model, output_path)
@@ -161,21 +161,24 @@ def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, save
                 #             Loss: {round(loss.item(),4)}, mIoU: {round(mIoU,4)}')
 
                 wandb.log({
-                "Train/loss": loss,
-                "Train/mIOU": mIoU,
-                "Train/acc": acc,
-                "Train/acc_cls": acc_cls
+                    "Train/loss": loss,
+                    "Train/mIOU": mIoU,
+                    "Train/acc": acc,
+                    "Train/acc_cls": acc_cls
                 })
              
         # validation 주기에 따른 loss 출력 및 best model 저장
         if (epoch + 1) % val_every == 0:
             avrg_loss, val_mIoU = validation(epoch + 1, model, val_loader, criterion, device)
             if best_mIoU < val_mIoU:
-                print(f"Best performance at epoch: {epoch + 1}")
-                print(f"Save model in {saved_dir}")
+                print(f">>>>>>>>>> Best performance at epoch: {epoch + 1} <<<<<<<<<<")
+                best_epoch = epoch + 1
+                print(f">>>>>>>>>> Save model in {saved_dir} <<<<<<<<<<")
                 best_mIoU = val_mIoU
                 save_model(model, saved_dir)
-                
+            
+            print(f">>>>>>>>>> BEST EPOCH : {best_epoch} <<<<<<<<<<")
+            print(f">>>>>>>>>> BEST mIoU : {best_mIoU} <<<<<<<<<<")
 
 def test(model, data_loader, device):
     size = 256

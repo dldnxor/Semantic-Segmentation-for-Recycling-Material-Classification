@@ -49,8 +49,8 @@ print('GPU 사용 가능 여부: {}'.format(torch.cuda.is_available()))
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-batch_size = 4   # Mini-batch size
-num_epochs = 2
+batch_size = 8   # Mini-batch size
+num_epochs = 50
 learning_rate = 0.0001
 
 # seed 고정
@@ -156,7 +156,7 @@ criterion = nn.CrossEntropyLoss()
 # Optimizer 정의
 optimizer = torch.optim.Adam(params = model.parameters(), lr = learning_rate, weight_decay=1e-6)
 
-wandb.init(project="test-project", entity="cv_09_semanticsegmentation")
+wandb.init(project="semantic_segmentation_baseline", entity="cv_09_semanticsegmentation", name="baseline_")
 wandb.config = {
     "learning_rate": learning_rate,
     "epochs": num_epochs,
