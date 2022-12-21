@@ -61,7 +61,7 @@ val_path = dataset_path + '/val.json'
 test_path = dataset_path + '/test.json'
 
 
-batch_size = 4 
+batch_size = 8 
 
 # collate_fn needs for batch
 def collate_fn(batch):
@@ -127,7 +127,7 @@ model = models.segmentation.fcn_resnet50(pretrained=True)
 model.classifier[4] = nn.Conv2d(512, 11, kernel_size=1)
 
 # best model 저장된 경로
-model_path = './saved/fcn_resnet50_best_model(pretrained).pt'
+model_path = './saved/fcn_resnet50_best_model(pretrained).pt'     # 모델 바꿔주세요
 
 # best model 불러오기
 checkpoint = torch.load(model_path, map_location=device)
@@ -150,4 +150,5 @@ for file_name, string in zip(file_names, preds):
                                    ignore_index=True)
 
 # submission.csv로 저장
-submission.to_csv("./submission/fcn_resnet50_best_model(pretrained).csv", index=False)
+submission.to_csv("./submission/fcn_resnet50_best_model(pretrained).csv", index=False)    # 저장 파일 이름 바꿔주세요
+print(">> CSV FILE SAVED <<")
