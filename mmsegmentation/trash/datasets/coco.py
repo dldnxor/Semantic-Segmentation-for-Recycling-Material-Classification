@@ -1,6 +1,6 @@
 # dataset settings 자신의 맞는 경로 수정하기
 dataset_type = "CustomDataset"
-data_root = "../../../input/data/mmseg/"
+data_root = "../../data/mmseg/"
 
 # class settings
 classes = [

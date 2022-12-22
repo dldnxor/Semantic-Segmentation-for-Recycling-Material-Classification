@@ -116,6 +116,7 @@ data
 wandb/
 work_dirs/
 mmseg/.mim
+artifacts/
 
 # Pytorch
 *.pth
