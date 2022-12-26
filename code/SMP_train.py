@@ -103,14 +103,19 @@ val_loader = torch.utils.data.DataLoader(dataset=val_dataset,
 
 import torch.nn as nn
 import segmentation_models_pytorch as smp
+from models import build
+
+build.register_encoder()
 
 # model 불러오기
 # 출력 label 수 정의 (classes=11)
-model = smp.Unet(
-    encoder_name="mit_b5", # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
-    encoder_weights="imagenet",     # use `imagenet` pre-trained weights for encoder initialization
-    in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
-    classes=11,                     # model output channels (number of classes in your dataset)
+
+model = smp.PAN(
+			encoder_name="swin_encoder",
+			encoder_weights="imagenet",
+            encoder_dilation=False,
+			in_channels=3,
+			classes=11
 )
 
 # 구현된 model에 임의의 input을 넣어 output이 잘 나오는지 test
@@ -136,7 +141,7 @@ optimizer = torch.optim.Adam(params = model.parameters(), lr = learning_rate, we
 # Scheduler 정의
 scheduler = StepLR(optimizer=optimizer, step_size=20, gamma=0.5)
 
-wandb.init(project="semantic_segmentation_baseline", entity="cv_09_semanticsegmentation", name="SMP_UNet_mit_b5_StepLR")    ########## 바꿔주세요 ##########
+wandb.init(project="semantic_segmentation_baseline", entity="cv_09_semanticsegmentation", name="SMP_PAN_SwinL")    ########## 바꿔주세요 ##########
 wandb.config = {
     "learning_rate": learning_rate,
     "epochs": num_epochs,

@@ -81,7 +81,7 @@ def validation(epoch, model, data_loader, criterion, device):
         
     return avrg_loss, mIoU
 
-def save_model(model, saved_dir, file_name='SMP_UNet_mit_b5_StepLR_best_model(pretrained).pt'):    ########## 저장 파일 이름 바꿔주세요 ##########
+def save_model(model, saved_dir, file_name='SMP_PAN_SwinL.pt'):    ########## 저장 파일 이름 바꿔주세요 ##########
     check_point = {'net': model.state_dict()}
     output_path = os.path.join(saved_dir, file_name)
     torch.save(model, output_path)
