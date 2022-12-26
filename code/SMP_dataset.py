@@ -81,13 +81,13 @@ def validation(epoch, model, data_loader, criterion, device):
         
     return avrg_loss, mIoU
 
-def save_model(model, saved_dir, file_name='SMP_UNet_efficientnet-b6_best_model(pretrained).pt'):    ########## 저장 파일 이름 바꿔주세요 ##########
+def save_model(model, saved_dir, file_name='SMP_UNet_mit_b5_StepLR_best_model(pretrained).pt'):    ########## 저장 파일 이름 바꿔주세요 ##########
     check_point = {'net': model.state_dict()}
     output_path = os.path.join(saved_dir, file_name)
     torch.save(model, output_path)
 
 
-def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, saved_dir, val_every, device):
+def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, scheduler, saved_dir, val_every, device):
     print(f'Start training..')
     n_class = 11
     best_loss = 9999999
@@ -128,6 +128,7 @@ def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, save
                 val_dict = {
                     "loss": round(loss.item(),4),
                     "mIoU": round(mIoU,4),
+                    "lr": optimizer.param_groups[0]['lr']
                 }
                 pbar.set_postfix(val_dict)
 
@@ -140,8 +141,10 @@ def train(num_epochs, model, data_loader, val_loader, criterion, optimizer, save
                     "Train/loss": loss,
                     "Train/mIOU": mIoU,
                     "Train/acc": acc,
-                    "Train/acc_cls": acc_cls
+                    "Train/acc_cls": acc_cls,
+                    "LearningRate" : optimizer.param_groups[0]['lr']
                 })
+            scheduler.step()
              
         # validation 주기에 따른 loss 출력 및 best model 저장
         if (epoch + 1) % val_every == 0:

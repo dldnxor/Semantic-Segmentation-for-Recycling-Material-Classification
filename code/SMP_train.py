@@ -21,6 +21,7 @@ import wandb
 
 from dataloader import CustomDataLoader
 from SMP_dataset import train, validation, save_model
+from torch.optim.lr_scheduler import *
 
 
 print('pytorch version: {}'.format(torch.__version__))
@@ -69,10 +70,6 @@ val_transform = A.Compose([
                           ToTensorV2()
                           ])
 
-test_transform = A.Compose([
-                           ToTensorV2()
-                           ])
-
 # create own Dataset 1 (skip)
 # validation set을 직접 나누고 싶은 경우
 # random_split 사용하여 data set을 8:2 로 분할
@@ -87,9 +84,6 @@ train_dataset = CustomDataLoader(data_dir=train_path, mode='train', transform=tr
 
 # validation dataset
 val_dataset = CustomDataLoader(data_dir=val_path, mode='val', transform=val_transform)
-
-# test dataset
-test_dataset = CustomDataLoader(data_dir=test_path, mode='test', transform=test_transform)
 
 
 # DataLoader
@@ -106,11 +100,6 @@ val_loader = torch.utils.data.DataLoader(dataset=val_dataset,
                                          num_workers=4,
                                          collate_fn=collate_fn)
 
-test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                          batch_size=batch_size,
-                                          num_workers=4,
-                                          collate_fn=collate_fn)
-
 
 import torch.nn as nn
 import segmentation_models_pytorch as smp
@@ -118,7 +107,7 @@ import segmentation_models_pytorch as smp
 # model 불러오기
 # 출력 label 수 정의 (classes=11)
 model = smp.Unet(
-    encoder_name="efficientnet-b6", # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="mit_b5", # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights="imagenet",     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=11,                     # model output channels (number of classes in your dataset)
@@ -139,15 +128,18 @@ if not os.path.isdir(saved_dir):
     
     
 # Loss function 정의
-criterion = nn.CrossEntropyLoss()
+criterion = criterion = nn.CrossEntropyLoss()
 
 # Optimizer 정의
 optimizer = torch.optim.Adam(params = model.parameters(), lr = learning_rate, weight_decay=1e-6)
 
-wandb.init(project="semantic_segmentation_baseline", entity="cv_09_semanticsegmentation", name="SMP_UNet_efficientnet-b6")    ########## 바꿔주세요 ##########
+# Scheduler 정의
+scheduler = StepLR(optimizer=optimizer, step_size=20, gamma=0.5)
+
+wandb.init(project="semantic_segmentation_baseline", entity="cv_09_semanticsegmentation", name="SMP_UNet_mit_b5_StepLR")    ########## 바꿔주세요 ##########
 wandb.config = {
     "learning_rate": learning_rate,
     "epochs": num_epochs,
     "batch_size": batch_size,
     }
-train(num_epochs, model, train_loader, val_loader, criterion, optimizer, saved_dir, val_every, device)
+train(num_epochs, model, train_loader, val_loader, criterion, optimizer, scheduler, saved_dir, val_every, device)
