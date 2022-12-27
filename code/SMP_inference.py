@@ -62,17 +62,25 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           collate_fn=collate_fn)
 
 
+import torch.nn as nn
+import segmentation_models_pytorch as smp
+from models import build
+
+build.register_encoder()
+
 # model 불러오기
 # 출력 label 수 정의 (classes=11)
-model = smp.Unet(
-    encoder_name="efficientnet-b6", # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
-    encoder_weights="imagenet",     # use `imagenet` pre-trained weights for encoder initialization
-    in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
-    classes=11,                     # model output channels (number of classes in your dataset)
+
+model = smp.PAN(
+			encoder_name="swin_encoder",
+			encoder_weights="imagenet",
+            encoder_dilation=False,
+			in_channels=3,
+			classes=11
 )
 
 # best model 저장된 경로
-model_path = './saved/SMP_UNet_efficientnet-b6_best_model(pretrained).pt'     # 모델 바꿔주세요
+model_path = './saved/SMP_PAN_SwinL.pt'     # 모델 바꿔주세요
 
 # best model 불러오기
 checkpoint = torch.load(model_path, map_location=device)
@@ -95,5 +103,5 @@ for file_name, string in zip(file_names, preds):
                                    ignore_index=True)
 
 # submission.csv로 저장
-submission.to_csv("./submission/SMP_UNet_efficientnet-b6_best_model(pretrained).csv", index=False)    # 저장 파일 이름 바꿔주세요
+submission.to_csv("./submission/SMP_PAN_SwinL.csv", index=False)    # 저장 파일 이름 바꿔주세요
 print(">> CSV FILE SAVED <<")
