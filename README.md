@@ -32,7 +32,7 @@
 >
 >### - 활용 장비 및 재료 
 > 서버: V100 GPU  
-> 라이브러리: MMSegmentation  
+> 라이브러리: MMSegmentation, Segmentation Models Pytorch(SMP)  
 > 개발 및 협업 툴: Git, Slack, Zoom, Visual Studio Code
 >
 > ### - 데이터 셋의 구조도
