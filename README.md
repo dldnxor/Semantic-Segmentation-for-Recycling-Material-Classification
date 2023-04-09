@@ -49,11 +49,11 @@
 >
 ---
 ## 👨‍👩‍👧‍👧Team Roles
->- **이우택**: SMP에서 모델 실험 진행, 다양한 augmentation 기법 활용
+>- **이우택**: EDA, SMP에서 모델 실험 진행, 다양한 augmentation 기법 활용
 >- **정승윤**: MMsegmentation segformer 학습, inference file 구현, ensemble file 구현 
 >- **김주희**: Wandb Setting, Fiftyone, transfer dataset for MMSeg, Albumentation 추가, UperNet Swin_Large/Tiny 모델 학습
 >- **이해욱**: SMP에서 모델 실험 진행, Swin-L encoder 추가, AMP(Mixed-Precision) 추가, UNet ResNet101 / PAN Swin_Large 모델 학습
->- **신현수**: EDA, Wandb Setting, SMP에서 모델 실험 진행, DiceFocalLoss, CDB Loss 구현 및 학습
+>- **신현수**: Wandb Setting, SMP에서 모델 실험 진행, DiceFocalLoss, CDB Loss 구현 및 학습
 ---
 ## 🗃️Procedures
 >**[2022.12.19 ~ 2022.12.23]**
